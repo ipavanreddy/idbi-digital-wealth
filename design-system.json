@@ -1,0 +1,44 @@
+{
+  "meta": {
+    "app": "wealth-avatar",
+    "definedOn": "2026-07-13",
+    "theme": "light",
+    "references": [
+      "IDBI Bank brand identity — deep teal-green primary with warm orange accent",
+      "Banking-app conventions (official, trustworthy, mass-to-HNI) over consumer-fintech playfulness",
+      "User selection at kickoff: 'IDBI brand (teal + orange)', light mode only"
+    ]
+  },
+  "colors": {
+    "primary": "#0B6E5A",
+    "primaryHover": "#095C4B",
+    "primaryForeground": "#FFFFFF",
+    "accent": "#F57C1F",
+    "accentHover": "#DC6A11",
+    "accentForeground": "#2A1500",
+    "background": "#F5F7F6",
+    "surface": "#FFFFFF",
+    "surfaceHover": "#EEF3F1",
+    "border": "#E2E8E5",
+    "textPrimary": "#0F1A17",
+    "textMuted": "#5B6B66",
+    "success": "#0E8F4E",
+    "warning": "#D99400",
+    "error": "#D64545",
+    "info": "#2563B0"
+  },
+  "typography": {
+    "fontSans": "Inter",
+    "scale": { "xs": "0.75rem", "sm": "0.875rem", "base": "1rem", "lg": "1.125rem", "xl": "1.25rem", "2xl": "1.5rem", "3xl": "1.875rem" }
+  },
+  "radius": { "sm": "6px", "md": "8px", "lg": "12px", "xl": "16px", "full": "9999px" },
+  "shadows": {
+    "sm": "0 1px 2px rgba(15,26,23,0.05)",
+    "md": "0 4px 12px rgba(15,26,23,0.08)",
+    "lg": "0 8px 32px rgba(15,26,23,0.12)"
+  },
+  "charts": {
+    "series": ["#0B6E5A", "#F57C1F", "#2563B0", "#0E8F4E", "#8B5CF6", "#D99400", "#EC4899", "#14B8A6"],
+    "note": "Category palette for spend charts (Recharts). Index 0 = primary teal, 1 = accent orange."
+  }
+}

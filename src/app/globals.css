@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * IDBI Wealth Avatar — design tokens.
+ * Mirror of apps/wealth-avatar/design-system.json. Single source of truth for
+ * runtime styling; Tailwind semantic classes resolve to these vars.
+ *
+ * Semantic colours are stored as SPACE-SEPARATED RGB CHANNELS (e.g. "11 110 90")
+ * so Tailwind can apply opacity via `rgb(var(--x) / <alpha-value>)` — that's what
+ * makes `bg-success/10`, `bg-text-primary/40` etc. work. Use rgb(var(--x)) when
+ * referencing a colour token directly in raw CSS / inline styles.
+ * Chart colours stay as full hex (Recharts needs a colour string).
+ * Theme: light only (per kickoff).
+ */
+:root {
+  /* colour channels */
+  --color-primary: 11 110 90;
+  --color-primary-hover: 9 92 75;
+  --color-primary-foreground: 255 255 255;
+  --color-accent: 245 124 31;
+  --color-accent-hover: 220 106 17;
+  --color-accent-foreground: 42 21 0;
+  --color-background: 245 247 246;
+  --color-surface: 255 255 255;
+  --color-surface-hover: 238 243 241;
+  --color-border: 226 232 229;
+  --color-text-primary: 15 26 23;
+  --color-text-muted: 91 107 102;
+  --color-success: 14 143 78;
+  --color-warning: 217 148 0;
+  --color-error: 214 69 69;
+  --color-info: 37 99 176;
+
+  /* chart series (full hex) */
+  --chart-1: #0b6e5a;
+  --chart-2: #f57c1f;
+  --chart-3: #2563b0;
+  --chart-4: #0e8f4e;
+  --chart-5: #8b5cf6;
+  --chart-6: #d99400;
+  --chart-7: #ec4899;
+  --chart-8: #14b8a6;
+
+  /* typography — next/font vars set on <html>, with graceful fallbacks */
+  --font-sans: var(--font-inter), var(--font-noto-dev), system-ui, -apple-system, sans-serif;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+
+  /* radius */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  /* shadows */
+  --shadow-sm: 0 1px 2px rgba(15, 26, 23, 0.05);
+  --shadow-md: 0 4px 12px rgba(15, 26, 23, 0.08);
+  --shadow-lg: 0 8px 32px rgba(15, 26, 23, 0.12);
+}
+
+* {
+  border-color: rgb(var(--color-border));
+}
+
+body {
+  background-color: rgb(var(--color-background));
+  color: rgb(var(--color-text-primary));
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Avatar presence pulse — CSS only, no animation library needed. */
+@keyframes avatar-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(245, 124, 31, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(245, 124, 31, 0);
+  }
+}
+.avatar-pulse {
+  animation: avatar-pulse 2.4s ease-in-out infinite;
+}
+
+/* Thin, on-brand scrollbars inside the phone frame. */
+.scroll-slim::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.scroll-slim::-webkit-scrollbar-thumb {
+  background: rgb(var(--color-border));
+  border-radius: var(--radius-full);
+}
