@@ -1,5 +1,6 @@
 import {
   ArrowLeftRight,
+  Briefcase,
   Car,
   Circle,
   Clapperboard,
@@ -8,6 +9,7 @@ import {
   Plane,
   ReceiptText,
   ShoppingBag,
+  Target,
   TrendingUp,
   UtensilsCrossed,
   Wallet,
@@ -32,6 +34,8 @@ const ICONS: Record<string, LucideIcon> = {
   ArrowLeftRight,
   Circle,
   Plane,
+  Target,
+  Briefcase,
 };
 
 export function Icon({ name, className, size = 18 }: { name: string; className?: string; size?: number }) {

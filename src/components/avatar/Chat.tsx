@@ -5,8 +5,10 @@ import { Send } from "lucide-react";
 import { useWealth } from "@/lib/store";
 import { t } from "@/lib/i18n";
 import { quickPrompts } from "@/lib/avatar/respond";
+import { useSpeechRecognition } from "@/lib/voice/useSpeechRecognition";
 import { AvatarFace } from "@/components/layout/AvatarFace";
 import { MessageBubble } from "@/components/avatar/MessageBubble";
+import { MicButton } from "@/components/ui/MicButton";
 
 /** The avatar conversation surface: history, quick prompts, and the input. */
 export function Chat() {
@@ -14,6 +16,7 @@ export function Chat() {
   const [draft, setDraft] = useState("");
   const endRef = useRef<HTMLDivElement>(null);
   const prompts = quickPrompts(language);
+  const speech = useSpeechRecognition(language, setDraft);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -63,10 +66,17 @@ export function Chat() {
 
       {/* Input */}
       <form onSubmit={submit} className="flex items-center gap-2 border-t border-border p-3">
+        {speech.supported && (
+          <MicButton
+            listening={speech.listening}
+            onClick={() => (speech.listening ? speech.stop() : speech.start())}
+            label={t("voice.speakToType", language)}
+          />
+        )}
         <input
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
-          placeholder={t("avatar.placeholder", language)}
+          placeholder={speech.listening ? t("voice.listening", language) : t("avatar.placeholder", language)}
           className="h-11 flex-1 rounded-full border border-border bg-surface px-4 text-sm text-text-primary outline-none focus:border-primary"
         />
         <button

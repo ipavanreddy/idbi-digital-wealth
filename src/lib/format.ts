@@ -42,6 +42,17 @@ export function maskPan(pan: string): string {
   return `${pan.slice(0, 5)}••••${pan.slice(9)}`;
 }
 
+/** Add N months to an ISO date, clamping the day to the target month's length. */
+export function addMonthsIso(fromIso: string, months: number): string {
+  const [y, m, d] = fromIso.split("-").map(Number);
+  const total = (m - 1) + months;
+  const ny = y + Math.floor(total / 12);
+  const nm = ((total % 12) + 12) % 12; // 0-based
+  const lastDay = new Date(ny, nm + 1, 0).getDate();
+  const nd = Math.min(d, lastDay);
+  return `${ny}-${String(nm + 1).padStart(2, "0")}-${String(nd).padStart(2, "0")}`;
+}
+
 /** Whole months between two ISO dates (from → to), floored at 0. */
 export function monthsBetween(fromIso: string, toIso: string): number {
   const [fy, fm, fd] = fromIso.split("-").map(Number);

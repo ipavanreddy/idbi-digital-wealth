@@ -121,6 +121,21 @@ const DICT = {
 
   "connect.ctaTitle": { en: "Connect your money", hi: "अपना पैसा जोड़ें" },
   "connect.ctaSub": { en: "Add cards, UPI & PAN so Saathi sees your full picture.", hi: "कार्ड, UPI और पैन जोड़ें ताकि साथी पूरी तस्वीर देखे।" },
+
+  "voice.goalsTitle": { en: "Add goals by voice", hi: "बोलकर लक्ष्य जोड़ें" },
+  "voice.goalsHint": { en: 'Tap the mic and just say them, e.g. "In 3 months buy a car, in 6 months a Europe trip".', hi: 'माइक दबाएँ और बस बोलें, जैसे "3 महीने में कार खरीदनी है, 6 महीने में यूरोप यात्रा"।' },
+  "voice.listening": { en: "Listening… speak your goals", hi: "सुन रहा हूँ… अपने लक्ष्य बोलें" },
+  "voice.orType": { en: "or type here", hi: "या यहाँ टाइप करें" },
+  "voice.transcriptPlaceholder": { en: "Your goals will appear here — you can edit before adding.", hi: "आपके लक्ष्य यहाँ दिखेंगे — जोड़ने से पहले संपादित कर सकते हैं।" },
+  "voice.findGoals": { en: "Find my goals", hi: "मेरे लक्ष्य खोजें" },
+  "voice.none": { en: 'No goal found — try naming a timeframe like "in 6 months".', hi: 'कोई लक्ष्य नहीं मिला — "6 महीने में" जैसा समय बताएँ।' },
+  "voice.review": { en: "Review & edit, then add", hi: "जाँचें, संपादित करें, फिर जोड़ें" },
+  "voice.add": { en: "Add goals", hi: "लक्ष्य जोड़ें" },
+  "voice.target": { en: "Target", hi: "लक्ष्य राशि" },
+  "voice.inMonths": { en: "in", hi: "में" },
+  "voice.monthsUnit": { en: "months", hi: "महीने" },
+  "voice.unsupported": { en: "Voice isn't available on this browser — type your goals below.", hi: "इस ब्राउज़र में वॉइस उपलब्ध नहीं — नीचे अपने लक्ष्य टाइप करें।" },
+  "voice.speakToType": { en: "Speak instead of typing", hi: "टाइप करने के बजाय बोलें" },
 } as const;
 
 export type TKey = keyof typeof DICT;

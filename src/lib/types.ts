@@ -247,3 +247,13 @@ export interface FrequentPlace {
   total: number;
   category: CategoryKey;
 }
+
+/** A goal parsed from speech/text, editable before it becomes a Goal. */
+export interface GoalDraft {
+  id: string;
+  title: string;
+  months: number;
+  amount: number;
+  type: GoalType;
+  icon: string;
+}

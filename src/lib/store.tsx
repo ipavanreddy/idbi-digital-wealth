@@ -70,6 +70,7 @@ type Action =
   | { type: "REMOVE_SOURCE"; id: string }
   | { type: "SET_PAN"; pan: string | null }
   | { type: "SET_CONSENT"; key: ConsentKey; value: boolean }
+  | { type: "ADD_GOAL"; goal: Omit<Goal, "id"> }
   | { type: "RESET" };
 
 function recompute(state: State): Nudge[] {
@@ -170,6 +171,12 @@ function reducer(state: State, action: Action): State {
     case "SET_CONSENT":
       return { ...state, consents: { ...state.consents, [action.key]: action.value } };
 
+    case "ADD_GOAL": {
+      const goal: Goal = { ...action.goal, id: `goal-${state.seq}` };
+      const next = { ...state, goals: [...state.goals, goal], seq: state.seq + 1 };
+      return { ...next, nudges: recompute(next) };
+    }
+
     case "RESET":
       return buildInitial(state.language);
 
@@ -196,6 +203,7 @@ interface StoreValue extends State {
   removeSource: (id: string) => void;
   setPan: (pan: string | null) => void;
   setConsent: (key: ConsentKey, value: boolean) => void;
+  addGoal: (goal: Omit<Goal, "id">) => void;
   resetDemo: () => void;
 }
 
@@ -248,6 +256,7 @@ export function WealthProvider({ children }: { children: ReactNode }) {
       removeSource: (id) => dispatch({ type: "REMOVE_SOURCE", id }),
       setPan: (pan) => dispatch({ type: "SET_PAN", pan }),
       setConsent: (key, value) => dispatch({ type: "SET_CONSENT", key, value }),
+      addGoal: (goal) => dispatch({ type: "ADD_GOAL", goal }),
       resetDemo: () => dispatch({ type: "RESET" }),
     };
   }, [state]);
