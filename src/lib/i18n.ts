@@ -13,7 +13,7 @@ const DICT = {
   "nav.home": { en: "Home", hi: "होम" },
   "nav.spend": { en: "Spends", hi: "खर्च" },
   "nav.goals": { en: "Goals", hi: "लक्ष्य" },
-  "nav.avatar": { en: "Avatar", hi: "अवतार" },
+  "nav.avatar": { en: "Saathi", hi: "साथी" },
   "nav.alerts": { en: "Alerts", hi: "अलर्ट" },
 
   "home.greeting": { en: "Hi", hi: "नमस्ते" },
@@ -24,8 +24,8 @@ const DICT = {
   "home.emergencyFund": { en: "Emergency fund", hi: "आपातकालीन कोष" },
   "home.months": { en: "months", hi: "महीने" },
   "home.spendThisMonth": { en: "Spending this month", hi: "इस महीने का खर्च" },
-  "home.topNudge": { en: "From your avatar", hi: "आपके अवतार से" },
-  "home.talkToAvatar": { en: "Talk to your avatar", hi: "अवतार से बात करें" },
+  "home.topNudge": { en: "From Saathi", hi: "साथी से" },
+  "home.talkToAvatar": { en: "Talk to Saathi", hi: "साथी से बात करें" },
   "home.viewAll": { en: "View all", hi: "सभी देखें" },
   "home.salaryDetected": { en: "Salary detected on day", hi: "वेतन का दिन" },
 
@@ -40,9 +40,9 @@ const DICT = {
   "goals.onTrack": { en: "On track", hi: "सही राह पर" },
   "goals.behind": { en: "Needs attention", hi: "ध्यान दें" },
   "goals.needPerMonth": { en: "needed / month", hi: "प्रति माह चाहिए" },
-  "goals.askAvatar": { en: "Ask the avatar", hi: "अवतार से पूछें" },
+  "goals.askAvatar": { en: "Ask Saathi", hi: "साथी से पूछें" },
 
-  "avatar.title": { en: "Your avatar", hi: "आपका अवतार" },
+  "avatar.title": { en: "Saathi", hi: "साथी" },
   "avatar.placeholder": { en: "Ask about your money…", hi: "अपने पैसे के बारे में पूछें…" },
   "avatar.send": { en: "Send", hi: "भेजें" },
   "avatar.subtitle": { en: "Advisory, not tips. Regulated advice goes to a human RM.", hi: "सलाह, टिप नहीं। विनियमित सलाह मानव RM को जाती है।" },

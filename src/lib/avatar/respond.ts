@@ -166,8 +166,8 @@ export function respond(intent: AvatarIntent, ctx: AvatarContext, lang: Language
             kind: "text",
             text: pick(
               lang,
-              `Hi ${customer.name.split(" ")[0]}! I'm your wealth avatar. Ask me about your spending, goals, emergency fund, or investing.`,
-              `नमस्ते ${customer.name.split(" ")[0]}! मैं आपका वेल्थ अवतार हूँ। मुझसे अपने खर्च, लक्ष्य, आपातकालीन कोष या निवेश के बारे में पूछें।`,
+              `Hi ${customer.name.split(" ")[0]}! I'm Saathi, your money companion. Ask me about your spending, goals, emergency fund, or investing.`,
+              `नमस्ते ${customer.name.split(" ")[0]}! मैं साथी हूँ, आपका पैसा साथी। मुझसे अपने खर्च, लक्ष्य, आपातकालीन कोष या निवेश के बारे में पूछें।`,
             ),
           },
         ],

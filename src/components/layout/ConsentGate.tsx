@@ -17,6 +17,7 @@ export function ConsentGate() {
   return (
     <div className="absolute inset-0 z-30 flex flex-col justify-end bg-text-primary/40 backdrop-blur-sm">
       <div className="rounded-t-[28px] bg-surface px-6 pb-8 pt-6 shadow-lg">
+        <img src="/brand/idbi-logo.png" alt="IDBI Bank" width={120} height={30} decoding="async" className="mx-auto mb-4 h-7 w-auto object-contain" />
         <div className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-full bg-primary/10 text-primary">
           <ShieldCheck size={26} aria-hidden />
         </div>

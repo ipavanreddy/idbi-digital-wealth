@@ -14,7 +14,7 @@ export function AvatarFace({ size = 48, animated = true, className }: { size?: n
         className,
       )}
       style={{ width: size, height: size }}
-      aria-label="Wealth avatar"
+      aria-label="Saathi"
     >
       <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-surface bg-accent" />
       <svg viewBox="0 0 24 24" width={size * 0.58} height={size * 0.58} fill="none" aria-hidden>

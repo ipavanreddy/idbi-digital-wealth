@@ -13,11 +13,22 @@ export function AppHeader() {
 
   return (
     <header className="flex items-center justify-between border-b border-border bg-surface px-4 py-3">
-      <div>
-        <p className="text-xs font-semibold uppercase tracking-wide text-primary">IDBI · {t("app.name", language)}</p>
-        <p className="text-sm text-text-muted">
-          {t("home.greeting", language)}, <span className="font-medium text-text-primary">{first}</span>
-        </p>
+      <div className="flex items-center gap-2.5">
+        {/* IDBI emblem (brand asset). White canvas blends on the white header. */}
+        <img
+          src="/brand/idbi-emblem-sq.png"
+          alt="IDBI Bank"
+          width={32}
+          height={32}
+          decoding="async"
+          className="h-8 w-8 object-contain"
+        />
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-wide text-primary">IDBI · {t("app.name", language)}</p>
+          <p className="text-sm text-text-muted">
+            {t("home.greeting", language)}, <span className="font-medium text-text-primary">{first}</span>
+          </p>
+        </div>
       </div>
       <div className="flex items-center gap-1 rounded-full border border-border p-0.5">
         {langs.map((l) => (
