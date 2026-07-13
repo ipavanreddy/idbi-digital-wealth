@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Link2 } from "lucide-react";
+import { Link2, Bell } from "lucide-react";
 import { useWealth } from "@/lib/store";
 import { t } from "@/lib/i18n";
 import type { Language } from "@/lib/types";
@@ -9,9 +9,10 @@ import { cn } from "@/lib/cn";
 
 /** Top bar: IDBI wordmark, greeting, and the language toggle (en/hi). */
 export function AppHeader() {
-  const { customer, language, setLanguage } = useWealth();
+  const { customer, language, setLanguage, nudges } = useWealth();
   const first = customer.name.split(" ")[0];
   const langs: Language[] = ["en", "hi"];
+  const unread = nudges.filter((n) => !n.acknowledged && (n.severity === "critical" || n.severity === "warning")).length;
 
   return (
     <header className="flex items-center justify-between border-b border-border bg-surface px-4 py-3">
@@ -39,6 +40,18 @@ export function AppHeader() {
           aria-label={t("connect.title", language)}
         >
           <Link2 size={16} />
+        </Link>
+        <Link
+          href="/alerts"
+          className="relative grid h-8 w-8 place-items-center rounded-full border border-border text-text-muted transition-colors hover:bg-surface-hover hover:text-primary"
+          aria-label={t("nav.alerts", language)}
+        >
+          <Bell size={16} />
+          {unread > 0 && (
+            <span className="absolute -right-1 -top-1 grid h-4 min-w-4 place-items-center rounded-full bg-accent px-1 text-[10px] font-bold text-accent-foreground">
+              {unread}
+            </span>
+          )}
         </Link>
         <div className="flex items-center gap-1 rounded-full border border-border p-0.5">
           {langs.map((l) => (

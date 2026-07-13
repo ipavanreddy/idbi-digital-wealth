@@ -248,6 +248,13 @@ export interface FrequentPlace {
   category: CategoryKey;
 }
 
+/** Mock auth session (demo only — no real SMS/server auth). */
+export interface Session {
+  authed: boolean;
+  mobile: string | null;
+  pin: string | null;
+}
+
 /** A goal parsed from speech/text, editable before it becomes a Goal. */
 export interface GoalDraft {
   id: string;

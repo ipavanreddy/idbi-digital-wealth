@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, PieChart, Target, MessageCircle, Bell } from "lucide-react";
+import { Home, PieChart, Target, MessageCircle, User } from "lucide-react";
 import { useWealth } from "@/lib/store";
 import { t, type TKey } from "@/lib/i18n";
 import { cn } from "@/lib/cn";
@@ -12,19 +12,17 @@ const TABS: { href: string; icon: typeof Home; key: TKey }[] = [
   { href: "/spend", icon: PieChart, key: "nav.spend" },
   { href: "/avatar", icon: MessageCircle, key: "nav.avatar" },
   { href: "/goals", icon: Target, key: "nav.goals" },
-  { href: "/alerts", icon: Bell, key: "nav.alerts" },
+  { href: "/profile", icon: User, key: "nav.profile" },
 ];
 
 export function BottomNav() {
   const pathname = usePathname();
-  const { language, nudges } = useWealth();
-  const unread = nudges.filter((n) => !n.acknowledged && (n.severity === "critical" || n.severity === "warning")).length;
+  const { language } = useWealth();
 
   return (
     <nav className="flex items-stretch border-t border-border bg-surface">
       {TABS.map(({ href, icon: IconCmp, key }) => {
         const active = pathname === href;
-        const isAlerts = href === "/alerts";
         return (
           <Link
             key={href}
@@ -34,14 +32,7 @@ export function BottomNav() {
               active ? "text-primary" : "text-text-muted hover:text-text-primary",
             )}
           >
-            <span className="relative">
-              <IconCmp size={20} strokeWidth={active ? 2.4 : 1.8} aria-hidden />
-              {isAlerts && unread > 0 && (
-                <span className="absolute -right-2 -top-1 grid h-4 min-w-4 place-items-center rounded-full bg-accent px-1 text-[10px] font-bold text-accent-foreground">
-                  {unread}
-                </span>
-              )}
-            </span>
+            <IconCmp size={20} strokeWidth={active ? 2.4 : 1.8} aria-hidden />
             {t(key, language)}
           </Link>
         );

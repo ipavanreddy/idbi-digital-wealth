@@ -15,10 +15,11 @@ import {
 } from "@/lib/data/seed";
 import { computeNudges } from "@/lib/rules/nudges";
 import { respond, routeIntent, type AvatarAction, type AvatarBubble, type AvatarContext, type AvatarIntent } from "@/lib/avatar/respond";
-import type { Account, ChatMessage, ConsentKey, ConsentSettings, Goal, Language, Lead, LeadStatus, LinkedSource, Nudge, Transaction } from "@/lib/types";
+import type { Account, ChatMessage, ConsentKey, ConsentSettings, Goal, Language, Lead, LeadStatus, LinkedSource, Nudge, Session, Transaction } from "@/lib/types";
 
 interface State {
   language: Language;
+  session: Session;
   consentGiven: boolean;
   accounts: Account[];
   transactions: Transaction[];
@@ -42,6 +43,7 @@ function buildInitial(language: Language = "en"): State {
   const nudges = computeNudges({ customer: RAVI, accounts, transactions, goals, today: DEMO_TODAY });
   return {
     language,
+    session: { authed: false, mobile: null, pin: null },
     consentGiven: false,
     accounts,
     transactions,
@@ -71,6 +73,8 @@ type Action =
   | { type: "SET_PAN"; pan: string | null }
   | { type: "SET_CONSENT"; key: ConsentKey; value: boolean }
   | { type: "ADD_GOAL"; goal: Omit<Goal, "id"> }
+  | { type: "LOGIN"; mobile: string; pin: string }
+  | { type: "LOGOUT" }
   | { type: "RESET" };
 
 function recompute(state: State): Nudge[] {
@@ -177,6 +181,13 @@ function reducer(state: State, action: Action): State {
       return { ...next, nudges: recompute(next) };
     }
 
+    case "LOGIN":
+      return { ...state, session: { authed: true, mobile: action.mobile, pin: action.pin } };
+
+    case "LOGOUT":
+      // Keep mobile + PIN so the return flow uses PIN entry, not PIN creation.
+      return { ...state, session: { ...state.session, authed: false } };
+
     case "RESET":
       return buildInitial(state.language);
 
@@ -204,6 +215,8 @@ interface StoreValue extends State {
   setPan: (pan: string | null) => void;
   setConsent: (key: ConsentKey, value: boolean) => void;
   addGoal: (goal: Omit<Goal, "id">) => void;
+  login: (mobile: string, pin: string) => void;
+  logout: () => void;
   resetDemo: () => void;
 }
 
@@ -257,6 +270,8 @@ export function WealthProvider({ children }: { children: ReactNode }) {
       setPan: (pan) => dispatch({ type: "SET_PAN", pan }),
       setConsent: (key, value) => dispatch({ type: "SET_CONSENT", key, value }),
       addGoal: (goal) => dispatch({ type: "ADD_GOAL", goal }),
+      login: (mobile, pin) => dispatch({ type: "LOGIN", mobile, pin }),
+      logout: () => dispatch({ type: "LOGOUT" }),
       resetDemo: () => dispatch({ type: "RESET" }),
     };
   }, [state]);

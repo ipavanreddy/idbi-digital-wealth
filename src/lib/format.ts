@@ -36,6 +36,13 @@ export function monthKey(isoDate: string): string {
 /** PAN regex: five letters, four digits, one letter (e.g. ABCDE1234F). */
 export const PAN_PATTERN = /^[A-Z]{5}[0-9]{4}[A-Z]$/;
 
+/** Mask a 10-digit mobile: 9876543210 → +91 ••••••3210. */
+export function maskMobile(mobile: string): string {
+  const digits = mobile.replace(/\D/g, "");
+  if (digits.length !== 10) return `+91 ${mobile}`;
+  return `+91 ${"•".repeat(6)}${digits.slice(6)}`;
+}
+
 /** Mask a PAN for display: ABCDE1234F → ABCDE••••F. */
 export function maskPan(pan: string): string {
   if (pan.length !== 10) return pan;
