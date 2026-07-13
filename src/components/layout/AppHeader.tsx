@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import { Link2 } from "lucide-react";
 import { useWealth } from "@/lib/store";
 import { t } from "@/lib/i18n";
 import type { Language } from "@/lib/types";
@@ -30,20 +32,29 @@ export function AppHeader() {
           </p>
         </div>
       </div>
-      <div className="flex items-center gap-1 rounded-full border border-border p-0.5">
-        {langs.map((l) => (
-          <button
-            key={l}
-            onClick={() => setLanguage(l)}
-            className={cn(
-              "rounded-full px-2.5 py-1 text-xs font-medium transition-colors",
-              language === l ? "bg-primary text-primary-foreground" : "text-text-muted hover:bg-surface-hover",
-            )}
-            aria-pressed={language === l}
-          >
-            {l === "en" ? "EN" : "हिं"}
-          </button>
-        ))}
+      <div className="flex items-center gap-2">
+        <Link
+          href="/connect"
+          className="grid h-8 w-8 place-items-center rounded-full border border-border text-text-muted transition-colors hover:bg-surface-hover hover:text-primary"
+          aria-label={t("connect.title", language)}
+        >
+          <Link2 size={16} />
+        </Link>
+        <div className="flex items-center gap-1 rounded-full border border-border p-0.5">
+          {langs.map((l) => (
+            <button
+              key={l}
+              onClick={() => setLanguage(l)}
+              className={cn(
+                "rounded-full px-2.5 py-1 text-xs font-medium transition-colors",
+                language === l ? "bg-primary text-primary-foreground" : "text-text-muted hover:bg-surface-hover",
+              )}
+              aria-pressed={language === l}
+            >
+              {l === "en" ? "EN" : "हिं"}
+            </button>
+          ))}
+        </div>
       </div>
     </header>
   );

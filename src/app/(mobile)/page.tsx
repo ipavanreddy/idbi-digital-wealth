@@ -9,6 +9,7 @@ import { formatINR } from "@/lib/format";
 import { NetWorthCard } from "@/components/dashboard/NetWorthCard";
 import { EmergencyFundCard } from "@/components/dashboard/EmergencyFundCard";
 import { NudgeCard } from "@/components/dashboard/NudgeCard";
+import { ConnectCard } from "@/components/dashboard/ConnectCard";
 import { SpendDonut } from "@/components/spend/SpendDonut";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
@@ -24,6 +25,8 @@ export default function HomePage() {
   return (
     <div className="space-y-5 p-4 pb-24">
       <NetWorthCard />
+
+      <ConnectCard />
 
       {rhythm.detected && (
         <div className="flex items-center gap-2 rounded-lg border border-border bg-surface px-3 py-2 text-xs text-text-muted">

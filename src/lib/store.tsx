@@ -8,12 +8,14 @@ import {
   RAVI,
   RELATIONSHIP_MANAGERS,
   SEED_ACCOUNTS,
+  SEED_CONSENTS,
   SEED_GOALS,
+  SEED_LINKED_SOURCES,
   generateTransactions,
 } from "@/lib/data/seed";
 import { computeNudges } from "@/lib/rules/nudges";
 import { respond, routeIntent, type AvatarAction, type AvatarBubble, type AvatarContext, type AvatarIntent } from "@/lib/avatar/respond";
-import type { Account, ChatMessage, Goal, Language, Lead, LeadStatus, Nudge, Transaction } from "@/lib/types";
+import type { Account, ChatMessage, ConsentKey, ConsentSettings, Goal, Language, Lead, LeadStatus, LinkedSource, Nudge, Transaction } from "@/lib/types";
 
 interface State {
   language: Language;
@@ -25,6 +27,9 @@ interface State {
   leads: Lead[];
   chat: ChatMessage[];
   pendingLead: AvatarReplyLead | null;
+  pan: string | null;
+  linkedSources: LinkedSource[];
+  consents: ConsentSettings;
   seq: number;
 }
 
@@ -35,7 +40,21 @@ function buildInitial(language: Language = "en"): State {
   const transactions = generateTransactions();
   const goals = SEED_GOALS.map((g) => ({ ...g }));
   const nudges = computeNudges({ customer: RAVI, accounts, transactions, goals, today: DEMO_TODAY });
-  return { language, consentGiven: false, accounts, transactions, goals, nudges, leads: [], chat: [], pendingLead: null, seq: 0 };
+  return {
+    language,
+    consentGiven: false,
+    accounts,
+    transactions,
+    goals,
+    nudges,
+    leads: [],
+    chat: [],
+    pendingLead: null,
+    pan: null,
+    linkedSources: SEED_LINKED_SOURCES.map((s) => ({ ...s })),
+    consents: { ...SEED_CONSENTS },
+    seq: 0,
+  };
 }
 
 type Action =
@@ -47,6 +66,10 @@ type Action =
   | { type: "CREATE_LEAD"; draft: AvatarReplyLead }
   | { type: "SET_LEAD_STATUS"; id: string; status: LeadStatus }
   | { type: "ACK_NUDGE"; id: string }
+  | { type: "ADD_SOURCE"; source: Omit<LinkedSource, "id" | "linkedOn"> }
+  | { type: "REMOVE_SOURCE"; id: string }
+  | { type: "SET_PAN"; pan: string | null }
+  | { type: "SET_CONSENT"; key: ConsentKey; value: boolean }
   | { type: "RESET" };
 
 function recompute(state: State): Nudge[] {
@@ -133,6 +156,20 @@ function reducer(state: State, action: Action): State {
     case "ACK_NUDGE":
       return { ...state, nudges: state.nudges.map((n) => (n.id === action.id ? { ...n, acknowledged: true } : n)) };
 
+    case "ADD_SOURCE": {
+      const source: LinkedSource = { ...action.source, id: `src-${state.seq}`, linkedOn: DEMO_TODAY };
+      return { ...state, linkedSources: [...state.linkedSources, source], seq: state.seq + 1 };
+    }
+
+    case "REMOVE_SOURCE":
+      return { ...state, linkedSources: state.linkedSources.filter((s) => s.id !== action.id) };
+
+    case "SET_PAN":
+      return { ...state, pan: action.pan };
+
+    case "SET_CONSENT":
+      return { ...state, consents: { ...state.consents, [action.key]: action.value } };
+
     case "RESET":
       return buildInitial(state.language);
 
@@ -155,6 +192,10 @@ interface StoreValue extends State {
   createLeadFromNudge: (topic: string, detail: string, productInterest: string, regulated: boolean) => void;
   setLeadStatus: (id: string, status: LeadStatus) => void;
   acknowledgeNudge: (id: string) => void;
+  addSource: (source: Omit<LinkedSource, "id" | "linkedOn">) => void;
+  removeSource: (id: string) => void;
+  setPan: (pan: string | null) => void;
+  setConsent: (key: ConsentKey, value: boolean) => void;
   resetDemo: () => void;
 }
 
@@ -164,7 +205,7 @@ export function WealthProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(reducer, undefined, () => buildInitial("en"));
 
   const value = useMemo<StoreValue>(() => {
-    const ctx: AvatarContext = { customer: RAVI, accounts: state.accounts, transactions: state.transactions, goals: state.goals, today: DEMO_TODAY };
+    const ctx: AvatarContext = { customer: RAVI, accounts: state.accounts, transactions: state.transactions, goals: state.goals, today: DEMO_TODAY, consents: state.consents };
 
     const emitReply = (intent: AvatarIntent, userText?: string) => {
       const reply = respond(intent, ctx, state.language);
@@ -203,6 +244,10 @@ export function WealthProvider({ children }: { children: ReactNode }) {
         dispatch({ type: "CREATE_LEAD", draft: { topic, detail, productInterest, regulated } }),
       setLeadStatus: (id, status) => dispatch({ type: "SET_LEAD_STATUS", id, status }),
       acknowledgeNudge: (id) => dispatch({ type: "ACK_NUDGE", id }),
+      addSource: (source) => dispatch({ type: "ADD_SOURCE", source }),
+      removeSource: (id) => dispatch({ type: "REMOVE_SOURCE", id }),
+      setPan: (pan) => dispatch({ type: "SET_PAN", pan }),
+      setConsent: (key, value) => dispatch({ type: "SET_CONSENT", key, value }),
       resetDemo: () => dispatch({ type: "RESET" }),
     };
   }, [state]);

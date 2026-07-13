@@ -195,3 +195,55 @@ export interface SuitabilityAssessment {
   allocation: { label: string; pct: number; colorIndex: number }[];
   rationale: string;
 }
+
+/* ---------- Connect module: linked sources, consent, completeness ---------- */
+
+export type SourceType = "BANK" | "CARD" | "UPI";
+export type CardNetwork = "VISA" | "MASTERCARD" | "RUPAY" | "AMEX";
+export type CardKind = "CREDIT" | "DEBIT";
+
+export interface LinkedSource {
+  id: string;
+  type: SourceType;
+  /** Display name, e.g. "HDFC Credit Card" or "IDBI Savings". */
+  label: string;
+  /** Masked identifier: card last-4, account tail, or UPI handle. */
+  detail: string;
+  network?: CardNetwork;
+  cardKind?: CardKind;
+  /** How it was connected: RBI Account Aggregator vs manually entered. */
+  linkedVia: "AA" | "MANUAL";
+  linkedOn: string;
+}
+
+/** Granular, revocable consents (DPDP). */
+export type ConsentKey = "transactions" | "location" | "extraIncome";
+export type ConsentSettings = Record<ConsentKey, boolean>;
+
+export interface CompletenessItem {
+  key: string;
+  label: string;
+  done: boolean;
+}
+
+export interface ProfileCompleteness {
+  score: number;
+  items: CompletenessItem[];
+}
+
+/** Income the bank can't see on a salary account alone. */
+export interface AdditionalIncomeStatus {
+  detected: boolean;
+  monthsWithIncome: number;
+  totalDetected: number;
+  averageMonthly: number;
+  salaryMonthly: number;
+  realMonthly: number;
+}
+
+export interface FrequentPlace {
+  merchant: string;
+  visits: number;
+  total: number;
+  category: CategoryKey;
+}

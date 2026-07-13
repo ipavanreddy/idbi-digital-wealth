@@ -1,6 +1,7 @@
 import { formatINR } from "@/lib/format";
-import type { Account, ChatMessage, Customer, Goal, Language, Transaction } from "@/lib/types";
+import type { Account, ChatMessage, ConsentSettings, Customer, Goal, Language, Transaction } from "@/lib/types";
 import { emergencyFundStatus, goalPlan, suitability } from "@/lib/rules/advisory";
+import { additionalIncomeStatus } from "@/lib/rules/connect";
 import {
   categorySpendThisMonth,
   investableSurplus,
@@ -17,7 +18,7 @@ import {
  * the rule outputs passed in as grounded facts so advice stays auditable.
  */
 
-export type AvatarIntent = "greeting" | "emergency_fund" | "goal" | "stocks" | "spend" | "invest" | "help";
+export type AvatarIntent = "greeting" | "emergency_fund" | "goal" | "stocks" | "spend" | "invest" | "income" | "help";
 
 export interface AvatarContext {
   customer: Customer;
@@ -25,6 +26,7 @@ export interface AvatarContext {
   transactions: Transaction[];
   goals: Goal[];
   today: string;
+  consents: ConsentSettings;
 }
 
 export interface AvatarAction {
@@ -41,6 +43,7 @@ export interface AvatarReply {
 
 const KEYWORDS: Record<AvatarIntent, string[]> = {
   stocks: ["stock", "stocks", "share", "shares", "equity", "which stock", "स्टॉक", "शेयर", "कौन सा शेयर"],
+  income: ["real income", "income", "earn", "earning", "salary", "freelance", "how much do i make", "आय", "कमाई", "आमदनी", "वेतन"],
   goal: ["goal", "europe", "trip", "travel", "यूरोप", "लक्ष्य", "ट्रिप", "यात्रा"],
   emergency_fund: ["emergency", "fund", "safety", "rainy", "आपात", "कोष", "सुरक्षा"],
   spend: ["spend", "spent", "spending", "food", "dining", "expense", "खर्च", "डाइनिंग", "खाना"],
@@ -52,7 +55,7 @@ const KEYWORDS: Record<AvatarIntent, string[]> = {
 /** Route free text to an intent. Order matters: regulated 'stocks' beats generic 'invest'. */
 export function routeIntent(text: string): AvatarIntent {
   const lower = text.toLowerCase();
-  const order: AvatarIntent[] = ["stocks", "goal", "emergency_fund", "spend", "invest", "greeting", "help"];
+  const order: AvatarIntent[] = ["stocks", "income", "goal", "emergency_fund", "spend", "invest", "greeting", "help"];
   for (const intent of order) {
     if (KEYWORDS[intent].some((k) => lower.includes(k))) return intent;
   }
@@ -159,6 +162,33 @@ export function respond(intent: AvatarIntent, ctx: AvatarContext, lang: Language
       return { bubbles: [{ kind: "suitability", text, meta: { allocation: s.allocation, horizonYears: s.horizonYears, rationale: s.rationale, regulated: false } }] };
     }
 
+    case "income": {
+      // "Real income" — needs both transaction + extra-income consent to reveal.
+      if (!ctx.consents.extraIncome || !ctx.consents.transactions) {
+        return {
+          bubbles: [
+            {
+              kind: "text",
+              text: pick(
+                lang,
+                `Right now I only see your salary. Turn on “Additional income” in Connect and I'll include freelance and other credits to show your real earnings — the part your bank can't see.`,
+                `अभी मैं केवल आपका वेतन देख पाता हूँ। Connect में “अतिरिक्त आय” चालू करें, फिर मैं फ्रीलांस और अन्य क्रेडिट जोड़कर आपकी वास्तविक कमाई दिखाऊँगा — वह हिस्सा जो आपका बैंक नहीं देख पाता।`,
+              ),
+            },
+          ],
+        };
+      }
+      const ai = additionalIncomeStatus(transactions, customer.monthlyIncome);
+      const text = ai.detected
+        ? pick(
+            lang,
+            `Your real income is about ${formatINR(ai.realMonthly)}/mo — ${formatINR(ai.salaryMonthly)} salary plus roughly ${formatINR(ai.averageMonthly)}/mo of other income I found across ${ai.monthsWithIncome} months (${formatINR(ai.totalDetected)} in total). Your bank sees only the salary — so this ${formatINR(ai.averageMonthly)}/mo can go toward your goals.`,
+            `आपकी वास्तविक आय लगभग ${formatINR(ai.realMonthly)}/माह है — ${formatINR(ai.salaryMonthly)} वेतन और लगभग ${formatINR(ai.averageMonthly)}/माह अन्य आय जो मैंने ${ai.monthsWithIncome} महीनों में पाई (कुल ${formatINR(ai.totalDetected)})। आपका बैंक केवल वेतन देखता है — तो यह ${formatINR(ai.averageMonthly)}/माह आपके लक्ष्यों में लगाया जा सकता है।`,
+          )
+        : pick(lang, `I don't see income beyond your salary yet.`, `अभी वेतन के अलावा कोई आय नहीं दिख रही।`);
+      return { bubbles: [{ kind: "text", text }] };
+    }
+
     case "greeting": {
       return {
         bubbles: [
@@ -195,6 +225,7 @@ export function quickPrompts(lang: Language): { intent: AvatarIntent; label: str
   return [
     { intent: "emergency_fund", label: pick(lang, "How's my emergency fund?", "मेरा आपातकालीन कोष कैसा है?") },
     { intent: "goal", label: pick(lang, "Am I on track for Europe?", "क्या मैं यूरोप के लिए तैयार हूँ?") },
+    { intent: "income", label: pick(lang, "What's my real income?", "मेरी वास्तविक आय क्या है?") },
     { intent: "stocks", label: pick(lang, "Which stocks should I buy?", "मुझे कौन से शेयर खरीदने चाहिए?") },
     { intent: "spend", label: pick(lang, "Where did my money go?", "मेरा पैसा कहाँ गया?") },
     { intent: "invest", label: pick(lang, "How should I invest my surplus?", "अधिशेष कैसे निवेश करूँ?") },

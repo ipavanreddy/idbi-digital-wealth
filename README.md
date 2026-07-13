@@ -34,7 +34,12 @@ The customer app renders inside a phone frame. Tap the floating **Demo controls*
    allocation instead, and offers an **RM callback**.
 5. **RM Console** (`/rm`, or via Demo controls) — the escalated lead appears on
    the bank side, routed to the right RM.
-6. **Language toggle** (header EN / हिं) — the shell and avatar switch to Hindi.
+6. **Connect your money** (header 🔗 icon or the Home card) — link cards, UPI &
+   PAN via an Account-Aggregator-style flow; a completeness gauge shows how much
+   Saathi can see. Toggle **Additional income** to reveal freelance/other income
+   the bank never sees (₹1,55,833/mo real vs ₹1,20,000 salary); toggle
+   **Location** for "places you visit often". All consents are revocable (DPDP).
+7. **Language toggle** (header EN / हिं) — the shell and avatar switch to Hindi.
 
 ## What's real vs. synthetic
 

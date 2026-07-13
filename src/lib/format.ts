@@ -33,6 +33,15 @@ export function monthKey(isoDate: string): string {
   return isoDate.slice(0, 7);
 }
 
+/** PAN regex: five letters, four digits, one letter (e.g. ABCDE1234F). */
+export const PAN_PATTERN = /^[A-Z]{5}[0-9]{4}[A-Z]$/;
+
+/** Mask a PAN for display: ABCDE1234F → ABCDE••••F. */
+export function maskPan(pan: string): string {
+  if (pan.length !== 10) return pan;
+  return `${pan.slice(0, 5)}••••${pan.slice(9)}`;
+}
+
 /** Whole months between two ISO dates (from → to), floored at 0. */
 export function monthsBetween(fromIso: string, toIso: string): number {
   const [fy, fm, fd] = fromIso.split("-").map(Number);
